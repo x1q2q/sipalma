@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sipalma/src/res/styles/index.dart';
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
@@ -6,7 +7,8 @@ class EditProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Edit Profil')),
+        appBar:
+            AppBar(title: Text('Edit Profil', style: AppTxtStyle.wTitleNav)),
         body: const SafeArea(child: Center(child: Text('edit profile page'))));
   }
 }

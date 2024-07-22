@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sipalma/src/routing/app_router.dart';
+import 'package:sipalma/src/res/styles/index.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -8,7 +9,8 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Profil')),
+        appBar:
+            AppBar(title: Text('Profil', style: AppTxtStyle.wTitleNav)),
         body: SafeArea(
             child: Column(
           children: <Widget>[

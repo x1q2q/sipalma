@@ -13,6 +13,7 @@ class SipalmaApp extends ConsumerWidget {
         routerConfig: router,
         theme: ThemeData(
             colorSchemeSeed: AppColors.primary,
+            fontFamily: 'Outfit',
             unselectedWidgetColor: Colors.grey,
             appBarTheme: const AppBarTheme(
                 backgroundColor: AppColors.primary,

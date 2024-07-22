@@ -2,8 +2,23 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
 class AppTxtStyle {
-  static const TextStyle productNameTile = TextStyle(
-      fontWeight: FontWeight.w600, color: AppColors.primary, fontSize: 16);
-  static const TextStyle productPriceTile = TextStyle(
-      fontWeight: FontWeight.w800, color: AppColors.secondary, fontSize: 17);
+  AppTxtStyle._();
+  static TextStyle wBold(double px) {
+    return TextStyle(
+        fontWeight: FontWeight.bold, color: Colors.white, fontSize: px);
+  }
+
+  static TextStyle wRegular(double px) {
+    return TextStyle(
+        fontWeight: FontWeight.w400, color: Colors.white, fontSize: px);
+  }
+
+  static TextStyle gBold(double px) {
+    return TextStyle(
+        fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: px);
+  }
+
+  static TextStyle wTitleNav = AppTxtStyle.wBold(26);
+
+  static TextStyle gMenuCard = AppTxtStyle.gBold(20);
 }
