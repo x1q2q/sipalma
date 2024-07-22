@@ -3,5 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'src/app.dart';
 
 void main() {
-  runApp(ProviderScope(child: const SipalmaApp()));
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const ProviderScope(child: SipalmaApp()));
 }
