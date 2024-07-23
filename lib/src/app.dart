@@ -14,7 +14,7 @@ class SipalmaApp extends ConsumerWidget {
         theme: ThemeData(
             colorSchemeSeed: AppColors.primary,
             fontFamily: 'Outfit',
-            unselectedWidgetColor: Colors.grey,
+            scaffoldBackgroundColor: Colors.white,
             appBarTheme: const AppBarTheme(
                 backgroundColor: AppColors.primary,
                 elevation: 0.2,

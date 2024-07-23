@@ -18,6 +18,21 @@ class AppTxtStyle {
         fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: px);
   }
 
+  static TextStyle gLight(double px) {
+    return TextStyle(
+        fontWeight: FontWeight.w400, color: AppColors.primary, fontSize: px);
+  }
+
+  static TextStyle bLight(double px) {
+    return TextStyle(
+        fontWeight: FontWeight.w400, color: AppColors.black, fontSize: px);
+  }
+
+  static TextStyle bBold(double px) {
+    return TextStyle(
+        fontWeight: FontWeight.bold, color: AppColors.black, fontSize: px);
+  }
+
   static TextStyle wTitleNav = AppTxtStyle.wBold(26);
 
   static TextStyle gMenuCard = AppTxtStyle.gBold(20);

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sipalma/src/res/styles/index.dart';
 import 'package:sipalma/src/res/widgets/index.dart';
+import 'package:sipalma/src/utils/extensions.dart';
+import 'list_billing_widget.dart';
 
 class BillingPage extends StatelessWidget {
   const BillingPage({super.key});
@@ -9,6 +11,26 @@ class BillingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('Tagihan', style: AppTxtStyle.wTitleNav)),
-        body: const SafeArea(child: Center(child: Text('biling page'))));
+        body: SafeArea(child: LayoutBuilder(builder:
+            (BuildContext context, BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          minHeight: viewportConstraints.maxHeight),
+                      child: Column(children: <Widget>[
+                        AppSearchbar(
+                            title: 'tagihan',
+                            onSubmit: (value) {
+                              print(value);
+                            }).addPd(y: 10),
+                        const ListBillingWidget()
+                      ]).addPd(all: 10)))
+              .addRefresher(
+                  bgColor: AppColors.green,
+                  onRefresh: () async {
+                    print('refreshsed');
+                  });
+        })));
   }
 }

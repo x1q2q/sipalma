@@ -7,4 +7,7 @@ class Assets {
   static const profile = 'assets/images/profile-icon.png';
   // svg
   static const patternSvg = 'assets/svg/pattern-sm.svg';
+  static const announcementSvg = 'assets/svg/announcements.svg';
+  static const billSvg = 'assets/svg/bills.svg';
+  static const paymentSvg = 'assets/svg/payments.svg';
 }
