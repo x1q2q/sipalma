@@ -23,26 +23,6 @@ extension WidgetHelpers on Widget {
     );
   }
 
-  Widget addMrg(
-      {double? l,
-      double? r,
-      double? t,
-      double? b,
-      double? x,
-      double? y,
-      double? all}) {
-    final margin = EdgeInsets.only(
-      left: all ?? x ?? l ?? 0,
-      right: all ?? x ?? r ?? 0,
-      top: all ?? y ?? t ?? 0,
-      bottom: all ?? y ?? b ?? 0,
-    );
-    return Container(
-      margin: margin,
-      child: this,
-    );
-  }
-
   Widget addBdRadius(double radius) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
@@ -69,6 +49,14 @@ extension WidgetHelpers on Widget {
         color: Colors.white,
         strokeWidth: 2.0,
         onRefresh: onRefresh,
+        child: this);
+  }
+
+  Widget addBorder({required Color color, double? radius}) {
+    return Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: color),
+            borderRadius: BorderRadius.circular(radius ?? 0)),
         child: this);
   }
 }

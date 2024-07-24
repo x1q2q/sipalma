@@ -22,20 +22,11 @@ class ListPaymentWidget extends StatelessWidget {
             height: 95,
             widget: contentTile(),
             onTap: () async {
-              await showModalBottomSheet(
-                  backgroundColor: Colors.white,
-                  isScrollControlled: true,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(32))),
+              await UIHelper.modalSheet(
                   context: context,
-                  builder: (BuildContext context) => Padding(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: AppBottomsheet(
-                        height: 650,
-                        colWidget: bottomSheetContent,
-                      )));
+                  child: AppBottomsheet(
+                    colWidget: bottomSheetContent,
+                  ));
             },
           );
         });
@@ -60,11 +51,13 @@ class ListPaymentWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Anda telah mengupload bukti transaksi pada: 12 Juni 2024',
+            'Anda telah mengupload bukti transaksi pada: \n12 Juni 2024,15:00',
             style: AppTxtStyle.bLight(16),
           ),
           AppStyle.yGapSm,
-          Image.asset(Assets.imageLogo)
+          Image.asset(Assets.bukti)
+              .addBdRadius(18)
+              .addBorder(color: AppColors.primary, radius: 18),
         ]);
   }
 

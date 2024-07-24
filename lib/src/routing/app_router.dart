@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sipalma/src/presentation/home/home_page.dart';
+import 'package:sipalma/src/presentation/auth/login_page.dart';
 import 'package:sipalma/src/presentation/announcement/announcement_page.dart';
 import 'package:sipalma/src/presentation/billing/billing_page.dart';
 import 'package:sipalma/src/presentation/payment/payment_page.dart';
@@ -25,9 +26,15 @@ final goRouter = Provider<GoRouter>((ref) {
   return GoRouter(
       navigatorKey: _key,
       debugLogDiagnostics: true,
-      initialLocation: '/home',
+      initialLocation: '/login',
       // refreshListenable: authState,
       routes: <RouteBase>[
+        GoRoute(
+            path: '/${AppRoutes.login.name}',
+            name: AppRoutes.login.name,
+            builder: (context, state) {
+              return const LoginPage();
+            }),
         GoRoute(
             path: '/${AppRoutes.home.name}',
             name: AppRoutes.home.name,

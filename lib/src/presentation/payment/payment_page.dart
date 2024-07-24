@@ -24,7 +24,7 @@ class PaymentPage extends StatelessWidget {
                             onSubmit: (value) {
                               print(value);
                             }).addPd(y: 10),
-                        ListPaymentWidget()
+                        const ListPaymentWidget()
                       ]).addPd(all: 10)))
               .addRefresher(
                   bgColor: AppColors.green,

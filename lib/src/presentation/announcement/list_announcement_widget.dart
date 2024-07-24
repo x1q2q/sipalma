@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sipalma/src/res/widgets/index.dart';
 import 'package:sipalma/src/res/styles/index.dart';
 import 'package:sipalma/src/res/assets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sipalma/src/utils/extensions.dart';
 
 class ListAnnouncementWidget extends StatelessWidget {
@@ -22,20 +22,11 @@ class ListAnnouncementWidget extends StatelessWidget {
             height: 95,
             widget: contentTile(),
             onTap: () async {
-              await showModalBottomSheet(
-                  backgroundColor: Colors.white,
-                  isScrollControlled: true,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(32))),
+              await UIHelper.modalSheet(
                   context: context,
-                  builder: (BuildContext context) => Padding(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: AppBottomsheet(
-                        height: 350,
-                        colWidget: bottomSheetContent,
-                      )));
+                  child: AppBottomsheet(
+                    colWidget: bottomSheetContent,
+                  ));
             },
           );
         });
@@ -104,7 +95,7 @@ class ListAnnouncementWidget extends StatelessWidget {
                 ],
               )
             ],
-          ).addMrg(x: 10))
+          ).addPd(x: 10))
         ]);
   }
 }

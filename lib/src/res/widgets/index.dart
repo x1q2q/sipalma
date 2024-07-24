@@ -3,3 +3,4 @@ export 'btn_primary.dart';
 export 'app_searchbar.dart';
 export 'card_tile.dart';
 export 'app_bottomsheet.dart';
+export 'field_input.dart';
