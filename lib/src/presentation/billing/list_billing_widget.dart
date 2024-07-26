@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sipalma/src/res/styles/app_txt_style.dart';
 import 'package:sipalma/src/res/widgets/index.dart';
 import 'package:sipalma/src/res/styles/index.dart';
 import 'package:sipalma/src/res/assets.dart';
 import 'package:sipalma/src/utils/extensions.dart';
+import 'package:sipalma/src/domain/billing/billing.dart';
+import 'package:sipalma/src/application/billing_provider.dart';
 
 enum MenuPopup { firstItem, secondItem }
 
-class ListBillingWidget extends StatelessWidget {
+class ListBillingWidget extends ConsumerWidget {
   const ListBillingWidget({super.key});
 
   Future<bool?> openSheet(BuildContext context, List<Widget> colWidget) async {
@@ -21,25 +23,37 @@ class ListBillingWidget extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    List<Widget> detailContent = [headBottomSheet(), bodyDetail(context)];
-    List<Widget> uploadContent = [headBottomSheet(), bodyMedia()];
-    return ListView.separated(
-        itemCount: 20,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        separatorBuilder: (BuildContext context, int index) => AppStyle.yGapSm,
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        itemBuilder: (BuildContext context, int index) {
-          return CardTile(
-            height: 95,
-            widget: contentTile(context,
-                colWidget1: detailContent, colWidget2: uploadContent),
-            onTap: () async {
-              await openSheet(context, detailContent);
-            },
-          );
-        });
+  Widget build(BuildContext context, WidgetRef ref) {
+    final billingAsyncValue = ref.watch(billingProvider);
+
+    return AsyncValueWidget<List<Billing>>(
+        value: billingAsyncValue,
+        data: (data) => ListView.separated(
+            itemCount: data.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            separatorBuilder: (BuildContext context, int index) =>
+                AppStyle.yGapSm,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            itemBuilder: (BuildContext context, int index) {
+              Billing item = data[index];
+              List<Widget> detailContent = [
+                headBottomSheet(item),
+                bodyDetail(context, item)
+              ];
+              List<Widget> uploadContent = [
+                headBottomSheet(item),
+                bodyMedia(item)
+              ];
+              return CardTile(
+                height: 95,
+                widget: contentTile(context, item,
+                    colWidget1: detailContent, colWidget2: uploadContent),
+                onTap: () async {
+                  await openSheet(context, detailContent);
+                },
+              );
+            }));
   }
 
   Widget headspan(String teks) {
@@ -49,15 +63,18 @@ class ListBillingWidget extends StatelessWidget {
         .addBdRadius(20);
   }
 
-  Widget headBottomSheet() {
+  Widget headBottomSheet(Billing item) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[headspan('Tagihan Api'), headspan('Rp. 50.000')],
+      children: <Widget>[
+        headspan('${item.title}'),
+        headspan('${item.totalAmount}')
+      ],
     ).addPd(y: 15);
   }
 
-  Widget bodyDetail(BuildContext context) {
-    List<Widget> colWidget = [headBottomSheet(), bodyUpload()];
+  Widget bodyDetail(BuildContext context, Billing item) {
+    List<Widget> colWidget = [headBottomSheet(item), bodyUpload(item)];
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -98,7 +115,7 @@ class ListBillingWidget extends StatelessWidget {
             .addBdRadius(18));
   }
 
-  Widget bodyMedia() {
+  Widget bodyMedia(Billing item) {
     void gallery() {
       print('galeri');
     }
@@ -133,7 +150,7 @@ class ListBillingWidget extends StatelessWidget {
     );
   }
 
-  Widget bodyUpload() {
+  Widget bodyUpload(Billing item) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -150,7 +167,7 @@ class ListBillingWidget extends StatelessWidget {
     );
   }
 
-  Widget contentTile(BuildContext context,
+  Widget contentTile(BuildContext context, Billing item,
       {required List<Widget> colWidget1, required List<Widget> colWidget2}) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -171,17 +188,17 @@ class ListBillingWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'Tagihan Api',
+                '${item.title}',
                 overflow: TextOverflow.ellipsis,
                 style: AppTxtStyle.bBold(16),
               ),
               Text(
-                'Sebesar Rp.5.000.000,00',
+                'Sebesar ${item.totalAmount}',
                 overflow: TextOverflow.ellipsis,
                 style: AppTxtStyle.bLight(13),
               ),
               Text(
-                'Jatuh pada 12 Juni 2024',
+                'Jatuh pada ${item.createdAt}',
                 overflow: TextOverflow.ellipsis,
                 style: AppTxtStyle.bLight(13),
               ),

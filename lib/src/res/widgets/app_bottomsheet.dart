@@ -8,14 +8,14 @@ class AppBottomsheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(20),
       width: MediaQuery.of(context).size.width,
       child: Wrap(alignment: WrapAlignment.center, children: [
         Container(
           width: 60,
           height: 6,
           color: Colors.grey[200],
-        ).addBdRadius(30),
+        ),
         ...colWidget
       ]),
     );

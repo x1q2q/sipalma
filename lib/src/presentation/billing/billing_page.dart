@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sipalma/src/application/billing_provider.dart';
 import 'package:sipalma/src/res/styles/index.dart';
 import 'package:sipalma/src/res/widgets/index.dart';
 import 'package:sipalma/src/utils/extensions.dart';
 import 'list_billing_widget.dart';
 
-class BillingPage extends StatelessWidget {
+class BillingPage extends ConsumerWidget {
   const BillingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         appBar: AppBar(title: Text('Tagihan', style: AppTxtStyle.wTitleNav)),
         body: SafeArea(child: LayoutBuilder(builder:
@@ -29,7 +31,7 @@ class BillingPage extends StatelessWidget {
               .addRefresher(
                   bgColor: AppColors.green,
                   onRefresh: () async {
-                    print('refreshsed');
+                    ref.refresh(billingProvider.future);
                   });
         })));
   }

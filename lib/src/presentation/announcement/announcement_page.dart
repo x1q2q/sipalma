@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sipalma/src/application/announcement_provider.dart';
 import 'package:sipalma/src/res/styles/index.dart';
 import 'package:sipalma/src/res/widgets/index.dart';
 import 'package:sipalma/src/utils/extensions.dart';
 import 'list_announcement_widget.dart';
 
-class AnnouncementPage extends StatelessWidget {
+class AnnouncementPage extends ConsumerWidget {
   const AnnouncementPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         appBar: AppBar(title: Text('Pengumuman', style: AppTxtStyle.wTitleNav)),
         body: SafeArea(child: LayoutBuilder(builder:
@@ -29,7 +31,7 @@ class AnnouncementPage extends StatelessWidget {
               .addRefresher(
                   bgColor: AppColors.green,
                   onRefresh: () async {
-                    print('refreshsed');
+                    ref.refresh(announcementProvider.future);
                   });
         })));
   }

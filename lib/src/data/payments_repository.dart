@@ -1,16 +1,16 @@
 import 'package:sipalma/src/application/api/api_exception.dart';
 import 'package:sipalma/src/application/api/api_service.dart';
 import 'package:sipalma/src/application/api/api_response.dart';
-import 'package:sipalma/src/domain/announcement/announcement.dart';
+import 'package:sipalma/src/domain/payment/payment.dart';
 
-class AnnouncementRepository {
+class PaymentsRepository {
   final ApiService _apiService;
-  AnnouncementRepository(this._apiService);
-  Future<ApiResponse<List<Announcement>>> getAnnouncements() async {
+  PaymentsRepository(this._apiService);
+  Future<ApiResponse<List<Payment>>> getPayments(String userId) async {
     try {
-      final response = await _apiService.getRequest('pengumuman');
+      final response = await _apiService.getRequest('pembayaran/$userId');
       final data = (response.data['data'] as List)
-          .map((item) => Announcement.fromJson(item))
+          .map((item) => Payment.fromJson(item))
           .toList();
       return ApiResponse(data: data);
     } catch (e) {

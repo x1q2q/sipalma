@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sipalma/src/application/payment_provider.dart';
 import 'package:sipalma/src/res/styles/index.dart';
 import 'package:sipalma/src/res/widgets/index.dart';
 import 'package:sipalma/src/utils/extensions.dart';
 import 'list_payment_widget.dart';
 
-class PaymentPage extends StatelessWidget {
+class PaymentPage extends ConsumerWidget {
   const PaymentPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         appBar: AppBar(title: Text('Pembayaran', style: AppTxtStyle.wTitleNav)),
         body: SafeArea(child: LayoutBuilder(builder:
@@ -26,11 +28,7 @@ class PaymentPage extends StatelessWidget {
                             }).addPd(y: 10),
                         const ListPaymentWidget()
                       ]).addPd(all: 10)))
-              .addRefresher(
-                  bgColor: AppColors.green,
-                  onRefresh: () async {
-                    print('refreshsed');
-                  });
+              .addRefresher(bgColor: AppColors.green, onRefresh: () async {});
         })));
   }
 }
