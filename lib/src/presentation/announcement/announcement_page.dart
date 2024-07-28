@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sipalma/src/application/announcement_provider.dart';
+import 'package:sipalma/src/application/announcement/announcements_service.dart';
 import 'package:sipalma/src/res/styles/index.dart';
 import 'package:sipalma/src/res/widgets/index.dart';
 import 'package:sipalma/src/utils/extensions.dart';
@@ -31,7 +31,7 @@ class AnnouncementPage extends ConsumerWidget {
               .addRefresher(
                   bgColor: AppColors.green,
                   onRefresh: () async {
-                    ref.refresh(announcementProvider.future);
+                    ref.refresh(fetchAnnouncementsProvider.future);
                   });
         })));
   }

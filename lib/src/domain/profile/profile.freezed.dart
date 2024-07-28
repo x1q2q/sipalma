@@ -143,7 +143,7 @@ class _$ProfileImpl implements _Profile {
   const _$ProfileImpl(
       {required this.id,
       required this.email,
-      required this.password,
+      this.password = '',
       required this.name,
       required this.address});
 
@@ -155,6 +155,7 @@ class _$ProfileImpl implements _Profile {
   @override
   final String email;
   @override
+  @JsonKey()
   final String password;
   @override
   final String name;
@@ -202,7 +203,7 @@ abstract class _Profile implements Profile {
   const factory _Profile(
       {required final int id,
       required final String email,
-      required final String password,
+      final String password,
       required final String name,
       required final String address}) = _$ProfileImpl;
 

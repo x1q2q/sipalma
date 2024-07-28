@@ -8,7 +8,7 @@ class Profile with _$Profile {
   const factory Profile(
       {required int id,
       required String email,
-      required String password,
+      @Default('') String password,
       required String name,
       required String address}) = _Profile;
   factory Profile.fromJson(Map<String, dynamic> json) =>

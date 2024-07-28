@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sipalma/src/res/styles/index.dart';
 import 'package:sipalma/src/res/widgets/app_dialog_cancel.dart';
 
 class UIHelper {
@@ -37,5 +38,38 @@ class UIHelper {
       builder: (context) => AppDialogCancel(
           title: title, contentText: content, colWidget: colWidget),
     );
+  }
+
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> rawToast(
+      BuildContext context, String message) {
+    final snackBarContent = SnackBar(
+      content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[Text(message, style: AppTxtStyle.wRegular(14))]),
+      backgroundColor: AppColors.black,
+      behavior: SnackBarBehavior.fixed,
+    );
+    return ScaffoldMessenger.of(context).showSnackBar(snackBarContent);
+  }
+
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> notifToast(
+      BuildContext context, String message, Color bgColor) {
+    final snackBarContent = SnackBar(
+        showCloseIcon: true,
+        duration: const Duration(milliseconds: 5000),
+        content:
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+          const Icon(Icons.info_outline, color: Colors.white),
+          const SizedBox(width: 4.0),
+          Expanded(
+              child: Text(message,
+                  style: AppTxtStyle.wRegular(15),
+                  overflow: TextOverflow.ellipsis))
+        ]),
+        backgroundColor: bgColor,
+        dismissDirection: DismissDirection.down,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.only(bottom: 40, right: 20, left: 20));
+    return ScaffoldMessenger.of(context).showSnackBar(snackBarContent);
   }
 }

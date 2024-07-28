@@ -10,7 +10,7 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
     _$ProfileImpl(
       id: (json['id'] as num).toInt(),
       email: json['email'] as String,
-      password: json['password'] as String,
+      password: json['password'] as String? ?? '',
       name: json['name'] as String,
       address: json['address'] as String,
     );

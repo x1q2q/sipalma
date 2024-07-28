@@ -1,19 +1,29 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sipalma/src/res/widgets/index.dart';
+import 'package:sipalma/src/routing/app_router.dart';
 import 'package:sipalma/src/res/styles/index.dart';
 import 'package:sipalma/src/res/assets.dart';
 import 'package:sipalma/src/utils/extensions.dart';
 import 'package:sipalma/src/domain/billing/billing.dart';
-import 'package:sipalma/src/application/billing_provider.dart';
+import 'package:sipalma/src/application/billing/billings_service.dart';
+import 'billing_controller.dart';
 
 enum MenuPopup { firstItem, secondItem }
 
-class ListBillingWidget extends ConsumerWidget {
+class ListBillingWidget extends ConsumerStatefulWidget {
   const ListBillingWidget({super.key});
 
+  @override
+  ConsumerState<ListBillingWidget> createState() => _ListBillingWidgetState();
+}
+
+class _ListBillingWidgetState extends ConsumerState<ListBillingWidget> {
+  final ImagePicker _picker = ImagePicker();
   Future<bool?> openSheet(BuildContext context, List<Widget> colWidget) async {
     return UIHelper.modalSheet(
         context: context,
@@ -22,9 +32,26 @@ class ListBillingWidget extends ConsumerWidget {
         ));
   }
 
+  Future<File?> getImage(String tipe) async {
+    XFile? image;
+    File? filePhoto;
+    ImageSource media =
+        tipe == 'camera' ? ImageSource.camera : ImageSource.gallery;
+    final pickedFile = await _picker.pickImage(source: media);
+    if (pickedFile != null) {
+      image = pickedFile;
+      filePhoto = File(image.path);
+      return filePhoto;
+    }
+    return null;
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final billingAsyncValue = ref.watch(billingProvider);
+  Widget build(BuildContext context) {
+    final billingAsyncValue = ref.watch(fetchBillingsProvider);
+    // ref.listen<AsyncValue<void>>(billingControllerProvider, (_, state) {
+    //   state.showSnackbar(context, 'Berhasil mengupload image');
+    // });
 
     return AsyncValueWidget<List<Billing>>(
         value: billingAsyncValue,
@@ -43,7 +70,7 @@ class ListBillingWidget extends ConsumerWidget {
               ];
               List<Widget> uploadContent = [
                 headBottomSheet(item),
-                bodyMedia(item)
+                bodyMedia(context, item)
               ];
               return CardTile(
                 height: 95,
@@ -67,14 +94,16 @@ class ListBillingWidget extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        headspan('${item.title}'),
-        headspan('${item.totalAmount}')
+        headspan('Tagihan ${item.title}'),
+        headspan(
+          '${item.totalAmount.toString().toRupiah()}',
+        )
       ],
     ).addPd(y: 15);
   }
 
   Widget bodyDetail(BuildContext context, Billing item) {
-    List<Widget> colWidget = [headBottomSheet(item), bodyUpload(item)];
+    List<Widget> colWidget = [headBottomSheet(item), bodyMedia(context, item)];
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -115,15 +144,8 @@ class ListBillingWidget extends ConsumerWidget {
             .addBdRadius(18));
   }
 
-  Widget bodyMedia(Billing item) {
-    void gallery() {
-      print('galeri');
-    }
-
-    void camera() {
-      print('kamera');
-    }
-
+  Widget bodyMedia(BuildContext context, Billing item) {
+    final updateState = ref.watch(billingControllerProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -136,33 +158,84 @@ class ListBillingWidget extends ConsumerWidget {
               inkButton([
                 SvgPicture.asset(Assets.galleryAdd),
                 Text('Galeri', style: AppTxtStyle.gBold(18))
-              ], () {
-                gallery();
+              ], () async {
+                await getImage('galeri').then((value) {
+                  context.pop();
+                  if (value != null) {
+                    List<Widget> uploadContent = [
+                      headBottomSheet(item),
+                      bodyUpload(context, item, value, updateState)
+                    ];
+                    openSheet(context, uploadContent);
+                  } else {
+                    UIHelper.rawToast(context, 'tidak ada gambar terpilih');
+                  }
+                });
               }),
               inkButton([
                 SvgPicture.asset(Assets.cameraAdd),
                 Text('kamera', style: AppTxtStyle.gBold(18))
-              ], () {
-                camera();
+              ], () async {
+                await getImage('camera').then((value) {
+                  context.pop();
+                  if (value != null) {
+                    List<Widget> uploadContent = [
+                      headBottomSheet(item),
+                      bodyUpload(context, item, value, updateState)
+                    ];
+                    openSheet(context, uploadContent);
+                  } else {
+                    UIHelper.rawToast(context, 'tidak ada gambar terpilih');
+                  }
+                });
               })
             ]).addBorder(color: AppColors.primary, radius: 18)
       ],
     );
   }
 
-  Widget bodyUpload(Billing item) {
+  Widget bodyUpload(BuildContext context, Billing item, File? filePhoto,
+      AsyncValue updateState) {
+    Map<String, dynamic> data = {
+      'id_user': '11',
+      'id_tagihan': item.id,
+      'nominal': item.totalAmount
+    };
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Image.asset(Assets.bukti)
+        Image.file(filePhoto!)
             .addBdRadius(18)
             .addBorder(color: AppColors.primary, radius: 18),
         AppStyle.yGapSm,
         Center(
-            child: ElevatedButton(
-                onPressed: () {},
-                style: AppBtnStyle.elevGreenSm,
-                child: Text('Upload Gambar', style: AppTxtStyle.wRegular(18))))
+            child: PrimaryButton(
+          icon: Text('Upload Gambar', style: AppTxtStyle.wRegular(18)),
+          label: SvgPicture.asset(Assets.upload),
+          isLoading: updateState.isLoading,
+          btnStyle: AppBtnStyle.elevGreenSm,
+          onPressed: updateState.isLoading
+              ? null
+              : () => ref
+                      .read(billingControllerProvider.notifier)
+                      .uploadImage(data: data, filePhoto: filePhoto)
+                      .then((stateError) {
+                    context.pop();
+                    if (stateError) {
+                      String errorObj = (updateState.error != null)
+                          ? updateState.error.toString()
+                          : 'Server internal error';
+                      UIHelper.notifToast(context, errorObj, AppColors.red);
+                    } else {
+                      context.goNamed(AppRoutes.home.name);
+                      UIHelper.notifToast(
+                          context,
+                          'Berhasil mengupload bukti pembayaran',
+                          AppColors.green);
+                    }
+                  }),
+        ))
       ],
     );
   }
@@ -188,17 +261,17 @@ class ListBillingWidget extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                '${item.title}',
+                'Tagihan ${item.title}',
                 overflow: TextOverflow.ellipsis,
                 style: AppTxtStyle.bBold(16),
               ),
               Text(
-                'Sebesar ${item.totalAmount}',
+                'Sebesar ${item.totalAmount.toString().toRupiah()}',
                 overflow: TextOverflow.ellipsis,
                 style: AppTxtStyle.bLight(13),
               ),
               Text(
-                'Jatuh pada ${item.createdAt}',
+                'Jatuh pada ${item.createdAt.toFormattedDate('dd MMMM yyyy')}',
                 overflow: TextOverflow.ellipsis,
                 style: AppTxtStyle.bLight(13),
               ),

@@ -17,4 +17,5 @@ class Assets {
   static const editProfil = 'assets/svg/edit.svg';
   static const logoutProfil = 'assets/svg/logout.svg';
   static const save = 'assets/svg/save.svg';
+  static const upload = 'assets/svg/plane.svg';
 }

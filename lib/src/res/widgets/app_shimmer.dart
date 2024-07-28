@@ -39,15 +39,10 @@ class AppShimmer {
           shrinkWrap: true,
           separatorBuilder: (BuildContext context, int index) =>
               AppStyle.yGapSm,
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (_, i) {
-            return baseContainer(double.infinity, 100, radius: 18);
+            return baseContainer(double.infinity, 90, radius: 18);
           }));
-  static Widget shimmerImgMd = Shimmer.fromColors(
-      baseColor: Colors.grey.shade200,
-      highlightColor: Colors.grey.shade300,
-      child: baseContainer(160, 160));
 
   static Widget shimmerSpan = Shimmer.fromColors(
       baseColor: Colors.grey.shade200,
@@ -58,34 +53,32 @@ class AppShimmer {
       baseColor: Colors.grey.shade200,
       highlightColor: Colors.grey.shade300,
       child: baseContainer(180, 36, radius: 30));
-
-  static Widget shimmerProfil = Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade400,
-      child: Column(
-        children: <Widget>[
-          AppStyle.yGapSm,
-          roundedContainer(),
-          AppStyle.yGapSm,
-          baseContainer(160, 26, radius: 18)
-        ],
-      ));
-
   static Widget shimmerListProfile = Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade400,
+      baseColor: Colors.white,
+      highlightColor: Colors.white12,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 15),
-        child: ListView.separated(
-            itemCount: 6,
-            shrinkWrap: true,
-            separatorBuilder: (BuildContext context, int index) =>
-                AppStyle.yGapSm,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (_, i) {
-              return baseContainer(double.infinity, 30, shadeGrey: 300);
-            }),
-      ));
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: <Widget>[
+              AppStyle.yGapSm,
+              roundedContainer(),
+              AppStyle.yGapSm,
+              baseContainer(160, 26, radius: 18),
+              AppStyle.yGapSm,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15),
+                child: ListView.separated(
+                    itemCount: 6,
+                    shrinkWrap: true,
+                    separatorBuilder: (BuildContext context, int index) =>
+                        AppStyle.yGapSm,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (_, i) {
+                      return baseContainer(double.infinity, 30, shadeGrey: 300);
+                    }),
+              )
+            ],
+          )));
 
   static Widget shimmerEditProfil = Shimmer.fromColors(
       baseColor: Colors.grey.shade300,

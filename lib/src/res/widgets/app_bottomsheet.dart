@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sipalma/src/utils/extensions.dart';
 
 class AppBottomsheet extends StatelessWidget {
   final List<Widget> colWidget;
@@ -8,16 +7,18 @@ class AppBottomsheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
-      width: MediaQuery.of(context).size.width,
-      child: Wrap(alignment: WrapAlignment.center, children: [
-        Container(
-          width: 60,
-          height: 6,
-          color: Colors.grey[200],
-        ),
-        ...colWidget
-      ]),
-    );
+        padding: const EdgeInsets.all(20),
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Wrap(alignment: WrapAlignment.center, children: [
+            Container(
+              width: 60,
+              height: 6,
+              color: Colors.grey[200],
+            ),
+            ...colWidget
+          ]),
+        ));
   }
 }

@@ -1,5 +1,21 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sipalma/src/res/widgets/ui_helper.dart';
+import 'package:sipalma/src/res/styles/app_colors.dart';
+
+extension StringExtensions on String {
+  String toRupiah() {
+    final formatter =
+        NumberFormat.currency(locale: 'id', symbol: 'Rp.', decimalDigits: 0);
+    return formatter.format(int.parse(this));
+  }
+
+  String toFormattedDate(String format) {
+    DateTime dateTime = DateTime.parse(this);
+    return DateFormat(format, "id_ID").format(dateTime);
+  }
+}
 
 extension WidgetHelpers on Widget {
   // all => all, l => left, t => top, r => right, b => bottom, x => horizontal, y => vertical
@@ -58,5 +74,20 @@ extension WidgetHelpers on Widget {
             border: Border.all(color: color),
             borderRadius: BorderRadius.circular(radius ?? 0)),
         child: this);
+  }
+}
+
+typedef VoidAsyncValue = AsyncValue<void>;
+
+extension AsyncValueUI on AsyncValue<void> {
+  bool get isLoading => this is AsyncLoading<void>;
+
+  void showSnackbar(BuildContext context, Function(void)? onSuccess) {
+    whenOrNull(
+      data: onSuccess,
+      error: (e, stack) {
+        UIHelper.notifToast(context, error.toString(), AppColors.red);
+      },
+    );
   }
 }

@@ -1,47 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sipalma/src/res/styles/app_txt_style.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sipalma/src/res/widgets/index.dart';
 import 'package:sipalma/src/routing/app_router.dart';
 import 'package:sipalma/src/res/styles/index.dart';
 import 'package:sipalma/src/res/assets.dart';
 import 'package:sipalma/src/utils/extensions.dart';
+import 'package:sipalma/src/application/profile/profile_service.dart';
+import 'package:sipalma/src/domain/profile/profile.dart';
+import 'profile_controller.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profileAsyncValue = ref.watch(fetchProfileProvider);
+
     return Scaffold(
         appBar: AppBar(title: Text('Profil', style: AppTxtStyle.wTitleNav)),
         backgroundColor: AppColors.lightgray,
         body: SafeArea(child: LayoutBuilder(builder:
             (BuildContext context, BoxConstraints viewportConstraints) {
-          return SingleChildScrollView(
-              physics: const PageScrollPhysics(),
-              child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(minHeight: viewportConstraints.maxHeight),
-                  child: Column(children: <Widget>[
-                    Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 25),
-                      height: 240.0,
-                      alignment: Alignment.center,
-                      child: headerProfile(context),
-                    ),
-                    listFieldUser(context),
-                    fieldButton(context),
-                  ]))).addRefresher(
-              bgColor: AppColors.primary,
-              onRefresh: () async {
-                print('seger');
-              });
+          return switch (profileAsyncValue) {
+            AsyncData(:final value) => SingleChildScrollView(
+                physics: const PageScrollPhysics(),
+                child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                        minHeight: viewportConstraints.maxHeight),
+                    child: Column(children: <Widget>[
+                      Container(
+                        color: Colors.white,
+                        padding: const EdgeInsets.fromLTRB(0, 30, 0, 25),
+                        height: 240.0,
+                        alignment: Alignment.center,
+                        child: headerProfile(context, value),
+                      ),
+                      listFieldUser(context, value),
+                      fieldButton(context, value, ref),
+                    ]))).addRefresher(
+                bgColor: AppColors.primary,
+                onRefresh: () async {
+                  ref.refresh(fetchProfileProvider);
+                }),
+            AsyncError(:final error) => Text('Error: ${error.toString()}',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge!
+                    .copyWith(color: Colors.red)),
+            _ => AppShimmer.shimmerListProfile,
+          };
         })));
   }
 
-  Widget headerProfile(BuildContext context) {
+  Widget headerProfile(BuildContext context, Profile item) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -90,7 +103,7 @@ class ProfilePage extends StatelessWidget {
         .addBdRadius(8);
   }
 
-  Widget listFieldUser(BuildContext context) {
+  Widget listFieldUser(BuildContext context, Profile item) {
     return Container(
         margin: const EdgeInsets.symmetric(vertical: 18),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
@@ -99,17 +112,16 @@ class ProfilePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               AppStyle.yGapXs,
-              profilFieldCard('Email', 'bejosulistyo@gmail.com'),
+              profilFieldCard('Email', item.email),
               AppStyle.yGapSm,
-              profilFieldCard('Nama Lengkap', 'Bejo Sulistyo Harahap'),
+              profilFieldCard('Nama Lengkap', item.name),
               AppStyle.yGapSm,
-              profilFieldCard('Alamat', 'Jl. Desa Localhost:8080, Jawa Utara',
-                  isColumn: true),
+              profilFieldCard('Alamat', item.address, isColumn: true),
               AppStyle.yGapXs
             ]));
   }
 
-  Widget fieldButton(BuildContext context) {
+  Widget fieldButton(BuildContext context, Profile item, WidgetRef ref) {
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         color: Colors.white,
@@ -140,8 +152,8 @@ class ProfilePage extends StatelessWidget {
                     const SizedBox(width: 10),
                     OutlinedButton(
                       style: AppBtnStyle.outlineRedSm,
-                      onPressed: () {
-                        print('telah logout');
+                      onPressed: () async {
+                        ref.read(profileControllerProvider.notifier).logout();
                       },
                       child: Text('Ya, Keluar', style: AppTxtStyle.rLight(14)),
                     )

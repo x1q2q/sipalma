@@ -6,20 +6,20 @@ import 'package:sipalma/src/res/styles/index.dart';
 import 'package:sipalma/src/res/assets.dart';
 import 'package:sipalma/src/utils/extensions.dart';
 import 'package:sipalma/src/domain/announcement/announcement.dart';
-import 'package:sipalma/src/application/announcement_provider.dart';
+import 'package:sipalma/src/application/announcement/announcements_service.dart';
 
 class ListAnnouncementWidget extends ConsumerWidget {
   const ListAnnouncementWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final announcementAsyncValue = ref.watch(announcementProvider);
+    final announcementAsyncValue = ref.watch(fetchAnnouncementsProvider);
     return AsyncValueWidget<List<Announcement>>(
         value: announcementAsyncValue,
         data: (data) => ListView.separated(
             itemCount: data.length,
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             separatorBuilder: (BuildContext context, int index) =>
                 AppStyle.yGapSm,
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -54,7 +54,7 @@ class ListAnnouncementWidget extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        headspan('${item.createdAt}'),
+        headspan('${item.createdAt}'.toFormattedDate('dd MMMM yyyy')),
         headspan('Oleh ${item.createdBy}')
       ],
     ).addPd(y: 15);
@@ -100,7 +100,7 @@ class ListAnnouncementWidget extends ConsumerWidget {
                     style: AppTxtStyle.bBold(13),
                   ),
                   Text(
-                    '${item.createdAt}',
+                    '${item.createdAt}'.toFormattedDate('dd MMMM yyyy'),
                     style: AppTxtStyle.bBold(13),
                   ),
                 ],
