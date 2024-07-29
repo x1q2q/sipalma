@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sipalma/src/application/profile/profile_service.dart';
+import 'package:sipalma/src/application/auth/auth_service.dart';
 import 'package:sipalma/src/domain/profile/profile.dart';
-
 part 'profile_controller.g.dart';
 
 @riverpod
@@ -20,6 +20,7 @@ class ProfileController extends _$ProfileController {
   }
 
   Future<void> logout() async {
-    print('telah logout');
+    final authHive = ref.read(hiveServiceProvider);
+    await authHive.deleteUser();
   }
 }

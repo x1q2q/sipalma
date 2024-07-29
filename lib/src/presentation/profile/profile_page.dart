@@ -153,7 +153,12 @@ class ProfilePage extends ConsumerWidget {
                     OutlinedButton(
                       style: AppBtnStyle.outlineRedSm,
                       onPressed: () async {
-                        ref.read(profileControllerProvider.notifier).logout();
+                        ref
+                            .read(profileControllerProvider.notifier)
+                            .logout()
+                            .then((_) {
+                          context.goNamed(AppRoutes.login.name);
+                        });
                       },
                       child: Text('Ya, Keluar', style: AppTxtStyle.rLight(14)),
                     )

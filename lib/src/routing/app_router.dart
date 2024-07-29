@@ -8,6 +8,7 @@ import 'package:sipalma/src/presentation/billing/billing_page.dart';
 import 'package:sipalma/src/presentation/payment/payment_page.dart';
 import 'package:sipalma/src/presentation/profile/profile_page.dart';
 import 'package:sipalma/src/presentation/profile/edit_profile_page.dart';
+import 'package:sipalma/src/application/hive/hive_service.dart';
 import 'not_found_page.dart';
 
 final _key = GlobalKey<NavigatorState>();
@@ -26,8 +27,7 @@ final goRouter = Provider<GoRouter>((ref) {
   return GoRouter(
       navigatorKey: _key,
       debugLogDiagnostics: true,
-      initialLocation: '/login',
-      // refreshListenable: authState,
+      initialLocation: '/home',
       routes: <RouteBase>[
         GoRoute(
             path: '/${AppRoutes.login.name}',
@@ -72,6 +72,11 @@ final goRouter = Provider<GoRouter>((ref) {
               return const EditProfilePage();
             })
       ],
+      redirect: (context, state) async {
+        final isAuthenticated = HiveService().getActiveUser();
+        // if hiveBox not null-> return `null` to redirected the initialLoc [which is home]
+        return (isAuthenticated != null) ? null : '/${AppRoutes.login.name}';
+      },
       errorPageBuilder: (context, state) =>
           const NoTransitionPage(child: NotFoundPage()));
 });

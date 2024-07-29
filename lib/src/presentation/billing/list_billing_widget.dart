@@ -49,38 +49,39 @@ class _ListBillingWidgetState extends ConsumerState<ListBillingWidget> {
   @override
   Widget build(BuildContext context) {
     final billingAsyncValue = ref.watch(fetchBillingsProvider);
-    // ref.listen<AsyncValue<void>>(billingControllerProvider, (_, state) {
-    //   state.showSnackbar(context, 'Berhasil mengupload image');
-    // });
 
     return AsyncValueWidget<List<Billing>>(
         value: billingAsyncValue,
-        data: (data) => ListView.separated(
-            itemCount: data.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            separatorBuilder: (BuildContext context, int index) =>
-                AppStyle.yGapSm,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            itemBuilder: (BuildContext context, int index) {
-              Billing item = data[index];
-              List<Widget> detailContent = [
-                headBottomSheet(item),
-                bodyDetail(context, item)
-              ];
-              List<Widget> uploadContent = [
-                headBottomSheet(item),
-                bodyMedia(context, item)
-              ];
-              return CardTile(
-                height: 95,
-                widget: contentTile(context, item,
-                    colWidget1: detailContent, colWidget2: uploadContent),
-                onTap: () async {
-                  await openSheet(context, detailContent);
-                },
-              );
-            }));
+        data: (data) => data.isEmpty
+            ? AppEmptyBox(onRefresh: () async {
+                ref.refresh(fetchBillingsProvider.future);
+              })
+            : ListView.separated(
+                itemCount: data.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                separatorBuilder: (BuildContext context, int index) =>
+                    AppStyle.yGapSm,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                itemBuilder: (BuildContext context, int index) {
+                  Billing item = data[index];
+                  List<Widget> detailContent = [
+                    headBottomSheet(item),
+                    bodyDetail(context, item)
+                  ];
+                  List<Widget> uploadContent = [
+                    headBottomSheet(item),
+                    bodyMedia(context, item)
+                  ];
+                  return CardTile(
+                    height: 95,
+                    widget: contentTile(context, item,
+                        colWidget1: detailContent, colWidget2: uploadContent),
+                    onTap: () async {
+                      await openSheet(context, detailContent);
+                    },
+                  );
+                }));
   }
 
   Widget headspan(String teks) {
@@ -197,7 +198,6 @@ class _ListBillingWidgetState extends ConsumerState<ListBillingWidget> {
   Widget bodyUpload(BuildContext context, Billing item, File? filePhoto,
       AsyncValue updateState) {
     Map<String, dynamic> data = {
-      'id_user': '11',
       'id_tagihan': item.id,
       'nominal': item.totalAmount
     };

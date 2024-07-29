@@ -23,3 +23,16 @@ Future<List<Billing>> fetchBillings(FetchBillingsRef ref) async {
     throw response.error!;
   }
 }
+
+@riverpod
+Future<List<Billing>> searchBilling(SearchBillingRef ref,
+    {required String query}) async {
+  final repository = ref.watch(billingsRepositoryProvider);
+  final response = await repository.searchBilling(query);
+  print(query);
+  if (response.success) {
+    return response.data!;
+  } else {
+    throw response.error!;
+  }
+}

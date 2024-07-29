@@ -39,4 +39,17 @@ class BillingsRepository {
       throw Exception('server error 400');
     }
   }
+
+  Future<ApiResponse<List<Billing>>> searchBilling(String query) async {
+    try {
+      final response = await _apiService.getRequest('tagihan/search/$query');
+      final data = (response.data['data'] as List)
+          .map((item) => Billing.fromJson(item))
+          .toList();
+      return ApiResponse(data: data);
+    } catch (e) {
+      return ApiResponse(
+          error: e is ApiException ? e : ApiException(e.toString()));
+    }
+  }
 }

@@ -77,17 +77,17 @@ extension WidgetHelpers on Widget {
   }
 }
 
-typedef VoidAsyncValue = AsyncValue<void>;
+// typedef VoidAsyncValue = AsyncValue<void>;
 
-extension AsyncValueUI on AsyncValue<void> {
-  bool get isLoading => this is AsyncLoading<void>;
+// extension AsyncValueUI on AsyncValue<void> {
+//   bool get isLoading => this is AsyncLoading<void>;
 
-  void showSnackbar(BuildContext context, Function(void)? onSuccess) {
-    whenOrNull(
-      data: onSuccess,
-      error: (e, stack) {
-        UIHelper.notifToast(context, error.toString(), AppColors.red);
-      },
-    );
-  }
-}
+//   void showSnackbar(BuildContext context, Function(void)? onSuccess) {
+//     whenOrNull(
+//       data: onSuccess,
+//       error: (e, stack) {
+//         UIHelper.notifToast(context, error.toString(), AppColors.red);
+//       },
+//     );
+//   }
+// }

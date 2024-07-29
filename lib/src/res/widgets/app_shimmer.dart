@@ -68,7 +68,7 @@ class AppShimmer {
               Padding(
                 padding: const EdgeInsets.only(bottom: 15),
                 child: ListView.separated(
-                    itemCount: 6,
+                    itemCount: 4,
                     shrinkWrap: true,
                     separatorBuilder: (BuildContext context, int index) =>
                         AppStyle.yGapSm,

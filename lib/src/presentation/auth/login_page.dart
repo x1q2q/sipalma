@@ -56,40 +56,41 @@ class LoginPage extends ConsumerWidget {
                         isObscure: true,
                         type: TextInputType.visiblePassword),
                     AppStyle.yGapSm,
-                    Consumer(builder: (context, ref, child) {
-                      // use Widget<consumer> cause when i placed ref.listen to the top[classThisPage]
-                      // everytime page reload, the state will return data/success
-                      // instead use ref.(provider.notifier).method().then((_){}), cause its sucks
-                      ref.listen<AsyncValue<void>>(loginControllerProvider,
-                          (_, state) {
-                        state.showSnackbar(context, (data) {
-                          UIHelper.notifToast(
-                              context, 'Berhasil login', AppColors.green);
-                          context.pushNamed(AppRoutes.home.name);
-                        });
-                      });
-                      return PrimaryButton(
-                          icon: Text('Masuk', style: AppTxtStyle.wBold(20)),
-                          label: const Icon(Icons.login),
-                          isLoading: updateState.isLoading,
-                          btnStyle: AppBtnStyle.elevGreenMd,
-                          onPressed: updateState.isLoading
-                              ? null
-                              : () {
-                                  String email = emailCtrlr.text;
-                                  String password = pwdCtrlr.text;
-                                  if (email.isEmpty || password.isEmpty) {
-                                    UIHelper.notifToast(
-                                        context,
-                                        'Username atau password masih kosong',
-                                        Colors.orange);
-                                  } else {
-                                    ref
-                                        .read(loginControllerProvider.notifier)
-                                        .submitLogin(email, password);
-                                  }
-                                });
-                    })
+                    PrimaryButton(
+                        icon: Text('Masuk', style: AppTxtStyle.wBold(20)),
+                        label: const Icon(Icons.login),
+                        isLoading: updateState.isLoading,
+                        btnStyle: AppBtnStyle.elevGreenMd,
+                        onPressed: updateState.isLoading
+                            ? null
+                            : () {
+                                String email = emailCtrlr.text;
+                                String password = pwdCtrlr.text;
+                                if (email.isEmpty || password.isEmpty) {
+                                  UIHelper.notifToast(
+                                      context,
+                                      'Username atau password masih kosong',
+                                      Colors.orange);
+                                } else {
+                                  ref
+                                      .read(loginControllerProvider.notifier)
+                                      .submitLogin(email, password)
+                                      .then((stateError) {
+                                    if (stateError) {
+                                      String errorObj =
+                                          (updateState.error != null)
+                                              ? updateState.error.toString()
+                                              : 'Server internal error';
+                                      UIHelper.notifToast(
+                                          context, errorObj, AppColors.red);
+                                    } else {
+                                      UIHelper.notifToast(context,
+                                          'Berhasil login', AppColors.green);
+                                      context.goNamed(AppRoutes.home.name);
+                                    }
+                                  });
+                                }
+                              })
                   ]).addPd(all: 15)));
     }))));
   }

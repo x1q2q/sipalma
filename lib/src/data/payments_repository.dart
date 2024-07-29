@@ -18,4 +18,19 @@ class PaymentsRepository {
           error: e is ApiException ? e : ApiException(e.toString()));
     }
   }
+
+  Future<ApiResponse<List<Payment>>> searchPayment(
+      int userId, String query) async {
+    try {
+      final response =
+          await _apiService.getRequest('pembayaran/serch/$userId/$query');
+      final data = (response.data['data'] as List)
+          .map((item) => Payment.fromJson(item))
+          .toList();
+      return ApiResponse(data: data);
+    } catch (e) {
+      return ApiResponse(
+          error: e is ApiException ? e : ApiException(e.toString()));
+    }
+  }
 }

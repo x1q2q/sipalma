@@ -22,6 +22,7 @@ Payment _$PaymentFromJson(Map<String, dynamic> json) {
 mixin _$Payment {
   int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
   int get total => throw _privateConstructorUsedError;
   @JsonKey(name: 'image_proof')
   String get imageProof => throw _privateConstructorUsedError;
@@ -41,6 +42,7 @@ abstract class $PaymentCopyWith<$Res> {
   $Res call(
       {int id,
       String title,
+      String status,
       int total,
       @JsonKey(name: 'image_proof') String imageProof,
       @JsonKey(name: 'created_at') String createdAt});
@@ -61,6 +63,7 @@ class _$PaymentCopyWithImpl<$Res, $Val extends Payment>
   $Res call({
     Object? id = null,
     Object? title = null,
+    Object? status = null,
     Object? total = null,
     Object? imageProof = null,
     Object? createdAt = null,
@@ -73,6 +76,10 @@ class _$PaymentCopyWithImpl<$Res, $Val extends Payment>
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
               as String,
       total: null == total
           ? _value.total
@@ -100,6 +107,7 @@ abstract class _$$PaymentImplCopyWith<$Res> implements $PaymentCopyWith<$Res> {
   $Res call(
       {int id,
       String title,
+      String status,
       int total,
       @JsonKey(name: 'image_proof') String imageProof,
       @JsonKey(name: 'created_at') String createdAt});
@@ -118,6 +126,7 @@ class __$$PaymentImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? title = null,
+    Object? status = null,
     Object? total = null,
     Object? imageProof = null,
     Object? createdAt = null,
@@ -130,6 +139,10 @@ class __$$PaymentImplCopyWithImpl<$Res>
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
               as String,
       total: null == total
           ? _value.total
@@ -153,6 +166,7 @@ class _$PaymentImpl implements _Payment {
   const _$PaymentImpl(
       {required this.id,
       required this.title,
+      required this.status,
       required this.total,
       @JsonKey(name: 'image_proof') required this.imageProof,
       @JsonKey(name: 'created_at') required this.createdAt});
@@ -165,6 +179,8 @@ class _$PaymentImpl implements _Payment {
   @override
   final String title;
   @override
+  final String status;
+  @override
   final int total;
   @override
   @JsonKey(name: 'image_proof')
@@ -175,7 +191,7 @@ class _$PaymentImpl implements _Payment {
 
   @override
   String toString() {
-    return 'Payment(id: $id, title: $title, total: $total, imageProof: $imageProof, createdAt: $createdAt)';
+    return 'Payment(id: $id, title: $title, status: $status, total: $total, imageProof: $imageProof, createdAt: $createdAt)';
   }
 
   @override
@@ -185,6 +201,7 @@ class _$PaymentImpl implements _Payment {
             other is _$PaymentImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.total, total) || other.total == total) &&
             (identical(other.imageProof, imageProof) ||
                 other.imageProof == imageProof) &&
@@ -195,7 +212,7 @@ class _$PaymentImpl implements _Payment {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, title, total, imageProof, createdAt);
+      Object.hash(runtimeType, id, title, status, total, imageProof, createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -215,6 +232,7 @@ abstract class _Payment implements Payment {
   const factory _Payment(
           {required final int id,
           required final String title,
+          required final String status,
           required final int total,
           @JsonKey(name: 'image_proof') required final String imageProof,
           @JsonKey(name: 'created_at') required final String createdAt}) =
@@ -226,6 +244,8 @@ abstract class _Payment implements Payment {
   int get id;
   @override
   String get title;
+  @override
+  String get status;
   @override
   int get total;
   @override

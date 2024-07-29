@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sipalma/src/application/announcement/announcements_service.dart';
 import 'package:sipalma/src/res/styles/index.dart';
-import 'package:sipalma/src/res/widgets/index.dart';
 import 'package:sipalma/src/utils/extensions.dart';
 import 'list_announcement_widget.dart';
 
@@ -20,14 +19,7 @@ class AnnouncementPage extends ConsumerWidget {
                   child: ConstrainedBox(
                       constraints: BoxConstraints(
                           minHeight: viewportConstraints.maxHeight),
-                      child: Column(children: <Widget>[
-                        AppSearchbar(
-                            title: 'pengumuman',
-                            onSubmit: (value) {
-                              print(value);
-                            }).addPd(y: 10),
-                        const ListAnnouncementWidget()
-                      ]).addPd(all: 10)))
+                      child: const ListAnnouncementWidget().addPd(all: 10)))
               .addRefresher(
                   bgColor: AppColors.green,
                   onRefresh: () async {
@@ -36,3 +28,11 @@ class AnnouncementPage extends ConsumerWidget {
         })));
   }
 }
+
+// AppSearchbar(
+// title: 'pengumuman',
+// onSubmit: (value) {
+//   ref.refresh(
+//       searchAnnouncementProvider(query: value)
+//           .future);
+// }).addPd(y: 10),

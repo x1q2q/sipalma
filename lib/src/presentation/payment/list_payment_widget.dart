@@ -18,31 +18,35 @@ class ListPaymentWidget extends ConsumerWidget {
 
     return AsyncValueWidget<List<Payment>>(
         value: paymentAsyncValue,
-        data: (data) => ListView.separated(
-            itemCount: data.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            separatorBuilder: (BuildContext context, int index) =>
-                AppStyle.yGapSm,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            itemBuilder: (BuildContext context, int index) {
-              Payment item = data[index];
-              List<Widget> bottomSheetContent = [
-                headBottomSheet(item),
-                bodyBottomSheet(item)
-              ];
-              return CardTile(
-                height: 95,
-                widget: contentTile(item),
-                onTap: () async {
-                  await UIHelper.modalSheet(
-                      context: context,
-                      child: AppBottomsheet(
-                        colWidget: bottomSheetContent,
-                      ));
-                },
-              );
-            }));
+        data: (data) => data.isEmpty
+            ? AppEmptyBox(onRefresh: () async {
+                ref.refresh(fetchPaymentsProvider.future);
+              })
+            : ListView.separated(
+                itemCount: data.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                separatorBuilder: (BuildContext context, int index) =>
+                    AppStyle.yGapSm,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                itemBuilder: (BuildContext context, int index) {
+                  Payment item = data[index];
+                  List<Widget> bottomSheetContent = [
+                    headBottomSheet(item),
+                    bodyBottomSheet(item)
+                  ];
+                  return CardTile(
+                    height: 95,
+                    widget: contentTile(item),
+                    onTap: () async {
+                      await UIHelper.modalSheet(
+                          context: context,
+                          child: AppBottomsheet(
+                            colWidget: bottomSheetContent,
+                          ));
+                    },
+                  );
+                }));
   }
 
   Widget headspan(String teks) {
@@ -58,7 +62,7 @@ class ListPaymentWidget extends ConsumerWidget {
       children: <Widget>[
         headspan('Tagihan ${item.title}'),
         headspan(
-          'Sebesar ${item.total.toString().toRupiah()}',
+          'Status ${item.status}',
         )
       ],
     ).addPd(y: 15);

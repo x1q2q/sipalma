@@ -16,31 +16,35 @@ class ListAnnouncementWidget extends ConsumerWidget {
     final announcementAsyncValue = ref.watch(fetchAnnouncementsProvider);
     return AsyncValueWidget<List<Announcement>>(
         value: announcementAsyncValue,
-        data: (data) => ListView.separated(
-            itemCount: data.length,
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
-            separatorBuilder: (BuildContext context, int index) =>
-                AppStyle.yGapSm,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            itemBuilder: (BuildContext context, int index) {
-              Announcement item = data[index];
-              List<Widget> bottomSheetContent = [
-                headBottomSheet(item),
-                bodyBottomSheet(item)
-              ];
-              return CardTile(
-                height: 95,
-                widget: contentTile(item),
-                onTap: () async {
-                  await UIHelper.modalSheet(
-                      context: context,
-                      child: AppBottomsheet(
-                        colWidget: bottomSheetContent,
-                      ));
-                },
-              );
-            }));
+        data: (data) => data.isEmpty
+            ? AppEmptyBox(onRefresh: () async {
+                ref.refresh(fetchAnnouncementsProvider.future);
+              })
+            : ListView.separated(
+                itemCount: data.length,
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                separatorBuilder: (BuildContext context, int index) =>
+                    AppStyle.yGapSm,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                itemBuilder: (BuildContext context, int index) {
+                  Announcement item = data[index];
+                  List<Widget> bottomSheetContent = [
+                    headBottomSheet(item),
+                    bodyBottomSheet(item)
+                  ];
+                  return CardTile(
+                    height: 95,
+                    widget: contentTile(item),
+                    onTap: () async {
+                      await UIHelper.modalSheet(
+                          context: context,
+                          child: AppBottomsheet(
+                            colWidget: bottomSheetContent,
+                          ));
+                    },
+                  );
+                }));
   }
 
   Widget headspan(String teks) {

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'gridmenu_widget.dart';
-import 'appbar_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sipalma/src/res/assets.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as svg_provider;
+import 'gridmenu_widget.dart';
+import 'appbar_widget.dart';
+import 'home_controller.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    String name = ref.watch(homeControllerProvider.notifier).getActiveUser();
     return Scaffold(
-        appBar:
-            const AppbarWidget(userName: 'Bejo Sulistyo', appName: 'Sipalma'),
+        appBar: AppbarWidget(userName: name, appName: 'Sipalma'),
         body: SafeArea(
             child: Container(
                 decoration: const BoxDecoration(

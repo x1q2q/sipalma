@@ -20,14 +20,7 @@ class BillingPage extends ConsumerWidget {
                   child: ConstrainedBox(
                       constraints: BoxConstraints(
                           minHeight: viewportConstraints.maxHeight),
-                      child: Column(children: <Widget>[
-                        AppSearchbar(
-                            title: 'tagihan',
-                            onSubmit: (value) {
-                              print(value);
-                            }).addPd(y: 10),
-                        const ListBillingWidget()
-                      ]).addPd(all: 10)))
+                      child: const ListBillingWidget().addPd(all: 10)))
               .addRefresher(
                   bgColor: AppColors.green,
                   onRefresh: () async {
@@ -36,3 +29,9 @@ class BillingPage extends ConsumerWidget {
         })));
   }
 }
+ // AppSearchbar(
+//     title: 'tagihan',
+//     onSubmit: (value) {
+//       ref.refresh(
+//           searchBillingProvider(query: value).future);
+//     }).addPd(y: 10),

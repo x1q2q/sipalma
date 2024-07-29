@@ -23,3 +23,15 @@ Future<List<Announcement>> fetchAnnouncements(FetchAnnouncementsRef ref) async {
     throw response.error!;
   }
 }
+
+@riverpod
+Future<List<Announcement>> searchAnnouncement(SearchAnnouncementRef ref,
+    {required String query}) async {
+  final repository = ref.watch(announcementsRepositoryProvider);
+  final response = await repository.searchAnnouncement(query);
+  if (response.success) {
+    return response.data!;
+  } else {
+    throw response.error!;
+  }
+}

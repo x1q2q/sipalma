@@ -36,7 +36,7 @@ final profileRepositoryProvider =
 );
 
 typedef ProfileRepositoryRef = AutoDisposeProviderRef<ProfileRepository>;
-String _$fetchProfileHash() => r'b3b3d39095601a720b73d64256a5faaf1cb26028';
+String _$fetchProfileHash() => r'574cf2e1266967db8d7591a3fc1356bdbf7ad80d';
 
 /// See also [fetchProfile].
 @ProviderFor(fetchProfile)

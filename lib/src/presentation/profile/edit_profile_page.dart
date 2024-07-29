@@ -46,36 +46,37 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue<void>>(profileControllerProvider, (_, state) {
-      // state.showSnackbar(context, 'Berhasil mengupdate data profil');
-    });
-    return Scaffold(
-        appBar:
-            AppBar(title: Text('Edit Profil', style: AppTxtStyle.wTitleNav)),
-        backgroundColor: AppColors.lightgray,
-        body: SafeArea(child: LayoutBuilder(builder:
-            (BuildContext context, BoxConstraints viewportConstraints) {
-          return SingleChildScrollView(
-              physics: const PageScrollPhysics(),
-              child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(minHeight: viewportConstraints.maxHeight),
-                  child: Column(children: <Widget>[
-                    Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 25),
-                      height: 180.0,
-                      alignment: Alignment.center,
-                      child: headerProfile(context),
-                    ),
-                    listFieldUser(context),
-                    fieldButton(context, ref),
-                  ]))).addRefresher(
-              bgColor: AppColors.primary,
-              onRefresh: () async {
-                ref.refresh(fetchProfileProvider);
-              });
-        })));
+    return GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
+            appBar: AppBar(
+                title: Text('Edit Profil', style: AppTxtStyle.wTitleNav)),
+            backgroundColor: AppColors.lightgray,
+            body: SafeArea(child: LayoutBuilder(builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                  physics: const PageScrollPhysics(),
+                  child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          minHeight: viewportConstraints.maxHeight),
+                      child: Column(children: <Widget>[
+                        Container(
+                          color: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 25),
+                          height: 180.0,
+                          alignment: Alignment.center,
+                          child: headerProfile(context),
+                        ),
+                        listFieldUser(context),
+                        fieldButton(context, ref),
+                      ]))).addRefresher(
+                  bgColor: AppColors.primary,
+                  onRefresh: () async {
+                    ref.refresh(fetchProfileProvider);
+                  });
+            }))));
   }
 
   Widget headerProfile(BuildContext context) {
@@ -137,24 +138,31 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                 onPressed: updateState.isLoading
                     ? null
                     : () {
-                        ref
-                            .read(profileControllerProvider.notifier)
-                            .updateData(data)
-                            .then((stateError) {
-                          if (stateError) {
-                            String errorObj = (updateState.error != null)
-                                ? updateState.error.toString()
-                                : 'Server internal error';
-                            UIHelper.notifToast(
-                                context, errorObj, AppColors.red);
-                          } else {
-                            UIHelper.notifToast(
-                                context,
-                                'Berhasil mengupdate data profil',
-                                AppColors.green);
-                            context.goNamed(AppRoutes.home.name);
-                          }
-                        });
+                        if (data['name'].isEmpty ||
+                            data['email'].isEmpty ||
+                            data['address'].isEmpty) {
+                          UIHelper.notifToast(context,
+                              'Harap isi field yang tersedia', Colors.orange);
+                        } else {
+                          ref
+                              .read(profileControllerProvider.notifier)
+                              .updateData(data)
+                              .then((stateError) {
+                            if (stateError) {
+                              String errorObj = (updateState.error != null)
+                                  ? updateState.error.toString()
+                                  : 'Server internal error';
+                              UIHelper.notifToast(
+                                  context, errorObj, AppColors.red);
+                            } else {
+                              UIHelper.notifToast(
+                                  context,
+                                  'Berhasil mengupdate data profil',
+                                  AppColors.green);
+                              context.goNamed(AppRoutes.home.name);
+                            }
+                          });
+                        }
                       }))
         .addPd(y: 15);
   }
